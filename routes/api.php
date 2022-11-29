@@ -35,7 +35,7 @@ Route::controller(PermissionsController::class)->group(function () {
     Route::post('permissions', 'store'); //Para guardar
     Route::put('permissions/{id}', 'update'); //Para actualizar
     Route::delete('permissions/{id}', 'destroy'); //Para eliminar un registro
-});
+})->middleware(['user-access', 'permission-access']);
 
 Route::controller(RolesController::class)->group(function () {
     Route::get('roles', 'index');
@@ -43,7 +43,7 @@ Route::controller(RolesController::class)->group(function () {
     Route::post('roles', 'store'); //Para guardar
     Route::put('roles/{id}', 'update'); //Para actualizar
     Route::delete('roles/{id}', 'destroy'); //Para eliminar un registro
-});
+})->middleware(['user-access', 'permission-access']);
 
 Route::controller(ProfilesController::class)->group(function () {
     Route::get('profiles', 'index'); //Para obtener todos
@@ -67,7 +67,7 @@ Route::controller(PermissionsRolesController::class)->group(function () {
     Route::post('permission_role', 'store'); //Para guardar
     Route::put('permission_role/{id}', 'update'); //Para actualizar
     Route::delete('permission_role/{id}', 'destroy'); //Para eliminar un registro
-});
+})->middleware(['user-access', 'permission-access']);
 
 
 Route::controller(TeamsController::class)->group(function () {
