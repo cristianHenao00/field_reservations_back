@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Field;
+use Exception;
 use Illuminate\Http\Request;
 
 class FieldsController extends Controller
@@ -25,8 +26,22 @@ class FieldsController extends Controller
     }
     public function store(Request $request)
     {
-        $the_field = Field::create($request->all());
-        return response($the_field, 201);
+        try {
+            $data = $request->validate([
+                'field_type' => 'required|string',
+                'field_characteristic' => 'required|string',
+                'field_location' => 'required|string'
+            ]);
+            $the_field = Field::where(['field_type', $data['field_type']], ['field_location', $data['field_location']])->first();
+            if (is_null($the_field)) {
+                $the_field = Field::create($data);
+                return response()->json(['field' => $the_field], 201);
+            }
+            return response()->json(['message' => 'existing database field '], 404);
+        } catch (Exception $e) {
+            return response(['data' => 'Data incomplete '], 400);
+        }
+
     }
 
     public function update(Request $request, $id)

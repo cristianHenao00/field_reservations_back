@@ -18,7 +18,8 @@ class UserAccess
     {
         if (!auth('api')->user()) {
             return response()->json(['You must login'], 401);
+        }else {
+            return $next($request);
         }
-        return $next($request);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use Exception;
 use Illuminate\Http\Request;
 
 class ReservationsController extends Controller
@@ -23,8 +24,23 @@ class ReservationsController extends Controller
     }
     public function store(Request $request)
     {
-        $the_reservation = Reservation::create($request->all());
-        return response($the_reservation, 201);
+        try {
+            $data = $request->validate([
+                'team_id' => 'required|integer',
+                'field_id' => 'required|integer',
+                'date' => 'required|date',
+                'hour' => 'required|timezone',
+                'experation' => 'required|timezone',
+            ]);
+            $the_reservation = Reservation::where(['field_id', $data['field_id']], ['date', $data['date']], ['hour', $data['hour']])->first();
+            if (is_null($the_reservation)) {
+                $reservation_new = Reservation::create($data);
+                return response()->json(['reservation' => $reservation_new], 201);
+            }
+            return response()->json(['message' => 'existing database reservation '], 404);
+        } catch (Exception $e) {
+            return response()->json(['data' => 'Data incomplete '], 400);
+        }
     }
 
     public function update(Request $request, $id)

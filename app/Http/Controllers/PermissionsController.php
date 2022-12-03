@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Permission;
+use Exception;
 use Illuminate\Http\Request;
 
 class PermissionsController extends Controller
@@ -24,8 +25,20 @@ class PermissionsController extends Controller
     }
     public function store(Request $request)
     {
-        $the_permission = Permission::create($request->all());
-        return response($the_permission, 201);
+        try {
+            $data = $request->validate([
+                'url' => 'required|string',
+                'method' => 'required|string',
+            ]);
+            $the_permission = Permission::where(['url', $data['url']], ['method', $data['method']])->first();
+            if (is_null($the_permission)) {
+                $the_permission = Permission::create($data);
+                return response()->json(['permission' => $the_permission], 201);
+            }
+            return response()->json(['message' => 'existing database permission '], 404);
+        } catch (Exception $e) {
+            return response()->json(['data' => 'Data incomplete '], 400);
+        }
     }
 
     public function update(Request $request, $id)

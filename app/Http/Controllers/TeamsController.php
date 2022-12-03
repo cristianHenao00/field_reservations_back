@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use Exception;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller
@@ -25,8 +26,22 @@ class TeamsController extends Controller
     }
     public function store(Request $request)
     {
-        $the_team = Team::create($request->all());
-        return response($the_team, 201);
+        try {
+            $data = $request->validate([
+                'name' => 'required|string',
+                'number_players' => 'required|integer',
+                'public' => 'required|boolean',
+                'limit' => 'required|integer'
+            ]);
+            $the_team = Team::where('name', $data['name'])->first();
+            if (is_null($the_team)) {
+                $team_new = Team::create($data);
+                return response(['team' => $team_new], 201);
+            }
+            return response()->json(['message' => 'existing database team '], 404);
+        } catch (Exception $e) {
+            return response()->json(['data' => 'Data incomplete '], 400);
+        }
     }
 
     public function update(Request $request, $id)
