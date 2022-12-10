@@ -30,7 +30,7 @@ class PermissionsController extends Controller
                 'url' => 'required|string',
                 'method' => 'required|string',
             ]);
-            $the_permission = Permission::where(['url', $data['url']], ['method', $data['method']])->first();
+            $the_permission = Permission::where([['url', $data['url']], ['method', $data['method']]])->first();
             if (is_null($the_permission)) {
                 $the_permission = Permission::create($data);
                 return response()->json(['permission' => $the_permission], 201);

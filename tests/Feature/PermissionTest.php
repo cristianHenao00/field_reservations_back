@@ -21,7 +21,8 @@ class PermissionTest extends TestCase
         $response->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) =>
-                $json->has(5)
+                $json->has(2)
+
             );
     }
 
@@ -52,16 +53,16 @@ class PermissionTest extends TestCase
     public function test_store()
     {
         $response = $this->postJson('api/permissions', [
-            'url' => '/pruebas1',
+            'url' => '/permissions',
             'method' => 'GET'
         ]);
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson(
                 fn (AssertableJson $json) =>
                 $json->has(
                     'permission',
                     fn ($json) =>
-                    $json->where('url', '/prueba1')
+                    $json->where('url', '/permissions')
                         ->where('method', 'GET')
                         ->etc()
                 )
@@ -70,21 +71,21 @@ class PermissionTest extends TestCase
 
     public function test_store_errorPermission()
     {
-        $response = $this->postJson('api/permission', [
-            'url' => '/pruebas1',
+        $response = $this->postJson('api/permissions', [
+            'url' => '/permissions',
             'method' => 'GET'
         ]);
 
         $response->assertStatus(404)
             ->assertJson([
-                'message' => 'existing database role '
+                'message' => 'existing database permission '
             ]);
     }
 
     public function test_store_errorValidation()
     {
-        $response = $this->postJson('api/permission', [
-            'url' => '/pruebas1',
+        $response = $this->postJson('api/permissions', [
+            'url' => '/permission',
             'method' => ''
         ]);
 
@@ -94,27 +95,25 @@ class PermissionTest extends TestCase
             ]);
     }
 
-    public function test_store_update()
+    public function test_update()
     {
-        $response = $this->putJson('api/permission/2', [
-            'url' => '/pruebas2',
-            'method' => 'GET'
+        $response = $this->putJson('api/permissions/2', [
+            'url' => '/pruebas'
         ]);
 
         $response->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) =>
-                $json->where('url', '/pruebas2')
-                    ->where('method', 'GET')
+                $json->where('id', 2)
+                    ->where('url', '/pruebas')
                     ->etc()
             );
     }
 
-    public function test_store_updateError()
+    public function test_updateError()
     {
-        $response = $this->putJson('api/permission/52', [
-            'url' => '/pruebas2',
-            'method' => 'GET'
+        $response = $this->putJson('api/permissions/52', [
+            'url' => '/pruebas',
         ]);
 
         $response->assertStatus(404)
@@ -123,17 +122,16 @@ class PermissionTest extends TestCase
             ]);
     }
 
-    public function test_store_delete()
+    public function test_delete()
     {
-        $response = $this->delete('api/permission/2');
+        $response = $this->delete('api/permissions/3');
 
-        $response->assertStatus(204)
-            ->assertJson(null);
+        $response->assertStatus(204);
     }
 
-    public function test_store_deleteError()
+    public function test_deleteError()
     {
-        $response = $this->delete('api/permission/2');
+        $response = $this->delete('api/permissions/3');
 
         $response->assertStatus(404)
             ->assertJson([

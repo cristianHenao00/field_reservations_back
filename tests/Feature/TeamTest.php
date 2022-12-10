@@ -33,7 +33,7 @@ class TeamTest extends TestCase
             ->assertJson(
                 fn (AssertableJson $json) =>
                 $json->where('id', 1)
-                    ->where('name', 'teamPrueba')
+                    ->where('name', 'teamPrueba1')
                     ->etc()
             );
     }
@@ -51,18 +51,18 @@ class TeamTest extends TestCase
     public function test_store()
     {
         $response = $this->postJson('api/teams', [
-            'name' => 'teamPrueba2',
+            'name' => 'teamPrueba3',
             'number_players' => 1,
             'public' => true,
             'limit' => 5
         ]);
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson(
                 fn (AssertableJson $json) =>
                 $json->has(
                     'team',
                     fn ($json) =>
-                    $json->where('name', 'teamPrueba2')
+                    $json->where('name', 'teamPrueba3')
                         ->etc()
                 )
             );
@@ -71,7 +71,7 @@ class TeamTest extends TestCase
     public function test_store_errorTeam()
     {
         $response = $this->postJson('api/teams', [
-            'name' => 'teamPrueba2',
+            'name' => 'teamPrueba3',
             'number_players' => 1,
             'public' => true,
             'limit' => 5
@@ -101,14 +101,13 @@ class TeamTest extends TestCase
     public function test_store_update()
     {
         $response = $this->putJson('api/teams/2', [
-            'name' => 'teamPrueba3',
+            'public' => false,
         ]);
 
         $response->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) =>
                 $json->where('id', 2)
-                    ->where('name', 'teamPrueba3')
                     ->etc()
             );
     }
@@ -116,7 +115,7 @@ class TeamTest extends TestCase
     public function test_store_updateError()
     {
         $response = $this->putJson('api/teams/22', [
-            'name' => 'teamPrueba3',
+            'public' => false,
         ]);
 
         $response->assertStatus(404)
@@ -127,15 +126,14 @@ class TeamTest extends TestCase
 
     public function test_store_delete()
     {
-        $response = $this->delete('api/teams/2');
+        $response = $this->delete('api/teams/3');
 
-        $response->assertStatus(204)
-            ->assertJson(null);
+        $response->assertStatus(204);
     }
 
     public function test_store_deleteError()
     {
-        $response = $this->delete('api/teams/2');
+        $response = $this->delete('api/teams/3');
 
         $response->assertStatus(404)
             ->assertJson([

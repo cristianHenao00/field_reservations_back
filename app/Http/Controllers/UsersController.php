@@ -41,7 +41,7 @@ class UsersController extends Controller
             $token = $user->createToken('API Token')->accessToken;
             return response(['user' => $user, 'token' => $token]);
         } catch (Exception $e) {
-            return response(['data' => "Data incomplete "], 400);
+            return response(['data' => 'Data incomplete '], 400);
         }
     }
 

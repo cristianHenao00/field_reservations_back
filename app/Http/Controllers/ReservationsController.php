@@ -28,11 +28,11 @@ class ReservationsController extends Controller
             $data = $request->validate([
                 'team_id' => 'required|integer',
                 'field_id' => 'required|integer',
-                'date' => 'required|date',
-                'hour' => 'required|timezone',
-                'experation' => 'required|timezone',
+                'date' => 'required',
+                'hour' => 'required',
+                'experation' => 'required',
             ]);
-            $the_reservation = Reservation::where(['field_id', $data['field_id']], ['date', $data['date']], ['hour', $data['hour']])->first();
+            $the_reservation = Reservation::where([['field_id', $data['field_id']], ['date', $data['date']], ['hour', $data['hour']]])->first();
             if (is_null($the_reservation)) {
                 $reservation_new = Reservation::create($data);
                 return response()->json(['reservation' => $reservation_new], 201);

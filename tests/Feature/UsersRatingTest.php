@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-class ProfileTest extends TestCase
+class UsersRatingTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -16,7 +16,7 @@ class ProfileTest extends TestCase
      */
     public function test_index()
     {
-        $response = $this->get('api/profiles');
+        $response = $this->get('api/users_rating');
 
         $response->assertStatus(200)
             ->assertJson(
@@ -27,7 +27,7 @@ class ProfileTest extends TestCase
 
     public function test_show()
     {
-        $response = $this->get('api/profiles/1');
+        $response = $this->get('api/users_rating/1');
 
         $response->assertStatus(200)
             ->assertJson(
@@ -39,7 +39,7 @@ class ProfileTest extends TestCase
 
     public function test_show_error()
     {
-        $response = $this->get('api/profiles/10');
+        $response = $this->get('api/users_rating/50');
 
         $response->assertStatus(404)
             ->assertJson([
@@ -47,25 +47,26 @@ class ProfileTest extends TestCase
             ]);
     }
 
-    public function test_update()
+    public function test_store()
     {
-        $response = $this->putJson('api/profiles/1', [
-            'phone_number' => '33333333333',
+        $response = $this->postJson('api/users_rating', [
+            'user_id' => 1,
+            'rating_id' => 2,
         ]);
-
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson(
                 fn (AssertableJson $json) =>
-                $json->where('id', 1)
-                    ->where('phone_number', '33333333333')
+                $json->where('user_id', 1)
+                    ->where('rating_id', 2)
                     ->etc()
             );
     }
 
+
     public function test_updateError()
     {
-        $response = $this->putJson('api/profiles/22', [
-            'phone_number' => '33333333333',
+        $response = $this->putJson('api/users_rating/52', [
+            'rating_id' => 1,
         ]);
 
         $response->assertStatus(404)
@@ -76,14 +77,14 @@ class ProfileTest extends TestCase
 
     public function test_delete()
     {
-        $response = $this->delete('api/profiles/1');
+        $response = $this->delete('api/users_rating/2');
 
         $response->assertStatus(204);
     }
 
     public function test_deleteError()
     {
-        $response = $this->delete('api/profiles/1');
+        $response = $this->delete('api/users_rating/2');
 
         $response->assertStatus(404)
             ->assertJson([

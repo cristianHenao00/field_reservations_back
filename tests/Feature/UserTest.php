@@ -53,8 +53,8 @@ class UserTest extends TestCase
     public function test_store()
     {
         $response = $this->postJson('api/users', [
-            'name' => 'prueba',
-            'email' => 'pueba@gmail.com',
+            'name' => 'prueba1',
+            'email' => 'pueba1@gmail.com',
             'password' => '5555',
             'role_id' => 1
         ]);
@@ -64,8 +64,8 @@ class UserTest extends TestCase
                 $json->has(
                     'user',
                     fn ($json) =>
-                    $json->where('name', 'prueba')
-                        ->where('email', 'pueba@gmail.com')
+                    $json->where('name', 'prueba1')
+                        ->where('email', 'pueba1@gmail.com')
                         ->etc()
                 )
                     ->has('token')
@@ -76,7 +76,7 @@ class UserTest extends TestCase
     {
         $response = $this->postJson('api/users', [
             'name' => '',
-            'email' => 'pueba@gmail.com',
+            'email' => 'pueba1@gmail.com',
             'password' => "5555",
             'role_id' => 1
         ]);
@@ -90,8 +90,8 @@ class UserTest extends TestCase
     public function test_store_errorEmail()
     {
         $response = $this->postJson('api/users', [
-            'name' => 'pueba12',
-            'email' => 'pueba@gmail.com',
+            'name' => 'pueba1',
+            'email' => 'pueba1@gmail.com',
             'password' => "6666",
             'role_id' => 1
         ]);
@@ -102,25 +102,25 @@ class UserTest extends TestCase
             ]);
     }
 
-    public function test_store_update()
+    public function test_update()
     {
         $response = $this->putJson('api/users/2', [
-            'name' => 'admin3',
+            'name' => 'Cliente',
         ]);
 
         $response->assertStatus(200)
             ->assertJson(
                 fn (AssertableJson $json) =>
                 $json->where('id', 2)
-                    ->where('name', 'admin3')
+                    ->where('name', 'Cliente')
                     ->etc()
             );
     }
 
-    public function test_store_updateError()
+    public function test_updateError()
     {
         $response = $this->putJson('api/users/5', [
-            'name' => 'admin3',
+            'name' => 'Cliente',
         ]);
 
         $response->assertStatus(404)
@@ -129,17 +129,16 @@ class UserTest extends TestCase
             ]);
     }
 
-    public function test_store_delete()
+    public function test_delete()
     {
-        $response = $this->delete('api/users/2');
+        $response = $this->delete('api/users/3');
 
-        $response->assertStatus(204)
-            ->assertJson(null);
+        $response->assertStatus(204);
     }
 
-    public function test_store_deleteError()
+    public function test_deleteError()
     {
-        $response = $this->delete('api/users/6');
+        $response = $this->delete('api/users/3');
 
         $response->assertStatus(404)
             ->assertJson([

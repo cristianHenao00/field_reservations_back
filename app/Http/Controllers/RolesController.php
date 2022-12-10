@@ -38,7 +38,7 @@ class RolesController extends Controller
                 return response()->json(['message' => 'existing database role '], 404);
             }
         } catch (Exception $e) {
-            return response()->json(['message' => 'Data incomplete '], 400);
+            return response()->json(['data' => 'Data incomplete '], 400);
         }
     }
 
