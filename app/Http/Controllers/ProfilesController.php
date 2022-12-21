@@ -25,17 +25,17 @@ class ProfilesController extends Controller
     public function store(Request $request)
     {
         $url = '';
-        if (
-            $request->file('image') && $request->file('image')->getClientOriginalExtension() == 'jpg' ||
-            $request->file('image')->getClientOriginalExtension() == 'png'
-        ) {
-            $file = $request->file('image');
-            $extension = $file->getClientOriginalExtension();
-            $filename = $request->user_id . '-' . time() . '.' . $extension;
-            $url = $file->move('avatars', $filename);
-        } else {
-            return response(['menssage' => 'An image must be uploaded'], 400);
-        }
+        // if (
+        //     $request->file('image') && $request->file('image')->getClientOriginalExtension() == 'jpg' ||
+        //     $request->file('image')->getClientOriginalExtension() == 'png'
+        // ) {
+        //     $file = $request->file('image');
+        //     $extension = $file->getClientOriginalExtension();
+        //     $filename = $request->user_id . '-' . time() . '.' . $extension;
+        //     $url = $file->move('avatars', $filename);
+        // } else {
+        //     return response(['menssage' => 'An image must be uploaded'], 400);
+        // }
         $the_profile = Profile::where('user_id', '=', $request->user_id)->first();
         if (is_null($the_profile)) {
             $data = $request->all();

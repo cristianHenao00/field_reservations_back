@@ -32,7 +32,7 @@ class FieldsController extends Controller
                 'field_characteristic' => 'required|string',
                 'field_location' => 'required|string'
             ]);
-            $the_field = Field::where([['field_type', $data['field_type']], ['field_location', $data['field_location']]])->first();
+            $the_field = Field::where([['field_type', $data['field_type']], ['field_characteristic', $data['field_characteristic']], ['field_location', $data['field_location']]])->first();
             if (is_null($the_field)) {
                 $the_field = Field::create($data);
                 return response()->json(['field' => $the_field], 201);
@@ -41,7 +41,6 @@ class FieldsController extends Controller
         } catch (Exception $e) {
             return response(['data' => 'Data incomplete '], 400);
         }
-
     }
 
     public function update(Request $request, $id)
