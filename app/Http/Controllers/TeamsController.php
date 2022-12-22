@@ -30,7 +30,7 @@ class TeamsController extends Controller
             $data = $request->validate([
                 'name' => 'required|string',
                 'number_players' => 'required|integer',
-                'public' => 'required|string',
+                'public' => 'required',
                 'limit' => 'required|integer'
             ]);
             $the_team = Team::where('name', $data['name'])->first();
